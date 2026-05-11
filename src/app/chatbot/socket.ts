@@ -1,0 +1,85 @@
+import { create } from "zustand";
+
+type Listener = (data: any) => void;
+
+type socketStorType = {
+    socket: WebSocket | null;
+    connected: boolean;
+    listeners: Listener[];
+
+    _manualDisconnect: boolean;
+
+    connect: () => void;
+    disconnect: () => void;
+    subscribe: (callback: Listener) => () => void;
+    send: (data: Object) => void;
+};
+
+export const useSocket = create<socketStorType>((set, get) => ({
+    socket: null,
+    connected: false,
+    listeners: [],
+    _manualDisconnect: false,
+
+    connect: () => {
+        set({ _manualDisconnect: true });
+        if (get().socket) return;
+
+        const port = "ws://localhost:8000";
+        const ws = new WebSocket(port);
+        console.log(`websocet:${port}`);
+
+        ws.onopen = () => {
+            console.log("WS connected");
+            set({ connected: true });
+        };
+
+        ws.onclose = () => {
+            console.log("WS disconnected");
+            set({ connected: false, socket: null });
+            if (!get()._manualDisconnect) {
+                setTimeout(() => {
+                    console.log("Reconnect");
+                    get().connect();
+                }, 2000);
+            }
+        };
+
+        ws.onmessage = (event) => {
+            const data = event.data;
+            get().listeners.forEach((cb) => cb(data));
+        };
+        set({ socket: ws, _manualDisconnect: false });
+    },
+
+    disconnect: () => {
+        const socket = get().socket;
+        set({ _manualDisconnect: true });
+        if (socket) {
+            socket.close();
+            set({ socket: null, connected: false });
+            console.log("WS manually disconnected");
+        }
+    },
+
+    subscribe: (callback) => {
+        set((state) => ({
+            listeners: [...state.listeners, callback],
+        }));
+
+        return () => {
+            set((state) => ({
+                listeners: state.listeners.filter((cb) => cb !== callback),
+            }));
+        };
+    },
+    send: (data) => {
+        const ws = get().socket;
+
+        if (ws && ws.readyState === 1) {
+            ws.send(JSON.stringify(data));
+        } else {
+            console.log("socket not connected");
+        }
+    },
+}));
