@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -6,7 +7,9 @@ import Box from "@mui/material/Box";
 import {
     menuType,
     DescriptionType,
-    settingOneParameterType,
+    settingOneSelectType,
+    MiniDescriptionType,
+    optionType,
 } from "../type/menu-type";
 import {
     Button,
@@ -29,20 +32,28 @@ import { TableBasic, TableBasicProps } from "./TableBasic";
 import axios from "axios";
 import EditDescription from "./EditDescription";
 import EditStrucure from "./EditStructure";
+import EditOptions from "./EditOptions";
 type propsType = {
-    setting: settingOneParameterType;
+    setting: settingOneSelectType;
     setSetting: (
-        set: (prev: settingOneParameterType) => settingOneParameterType,
+        set: (prev: settingOneSelectType) => settingOneSelectType,
     ) => void;
 };
-export default function EditMenu_settingOneParameter({
+type tabType = "Structure" | "Description" | "Options";
+
+export default function EditMenu_settingOneSelect({
     setting,
     setSetting,
 }: propsType) {
-    const [tab, setTab] = React.useState("Structure");
+    const [tab, setTab] = React.useState<tabType>("Structure");
 
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        setTab(newValue);
+    const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
+        if (
+            newValue == "Structure" ||
+            newValue == "Description" ||
+            newValue == "Options"
+        )
+            setTab(newValue);
     };
 
     const description = setting.description;
@@ -54,18 +65,30 @@ export default function EditMenu_settingOneParameter({
             };
         });
     };
+
+    const options = setting.options;
+    const setOptions = (set: (prev: optionType[]) => optionType[]) => {
+        setSetting((prev) => {
+            return {
+                ...prev,
+                options: set(prev.options),
+            };
+        });
+    };
+
     return (
         <>
             <Box sx={{ width: "100%", height: "80%" }}>
                 <Tabs
                     value={tab}
-                    onChange={handleChange}
+                    onChange={handleChangeTab}
                     textColor="secondary"
                     indicatorColor="secondary"
                     aria-label="secondary tabs example"
                 >
                     <Tab value="Description" label="Description" />
                     <Tab value="Structure" label="Structure" />
+                    <Tab value="Options" label="Options" />
                 </Tabs>
 
                 <div hidden={tab != "Description"}>
@@ -84,6 +107,9 @@ export default function EditMenu_settingOneParameter({
                     }}
                 >
                     <EditStrucure setting={setting} />
+                </div>
+                <div hidden={tab != "Options"}>
+                    <EditOptions options={options} setOptions={setOptions} />
                 </div>
             </Box>
         </>

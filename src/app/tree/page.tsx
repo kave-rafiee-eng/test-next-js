@@ -11,22 +11,20 @@ import EditMenu from "./component/EditMenu";
 import { typeMenuEnum } from "./type/menu-type";
 
 export default function Menu() {
-    console.log("Menu component render");
+    const [editId, setEditId] = React.useState<string>("14");
     const api = axios.create({
         baseURL: "http://localhost:3000",
     });
 
-    const [menus, setMenus] = React.useState<menuType[]>([]);
+    const [allMenus, setAllMenus] = React.useState<menuType[]>([]);
 
     React.useEffect(() => {
         const loadData = async () => {
             try {
                 const response = await api.get("/menu");
-
-                setMenus((prev) => {
+                setAllMenus((prev) => {
                     return response.data;
                 });
-                console.log(response.data);
             } catch (err) {
                 console.log(err);
             }
@@ -37,24 +35,43 @@ export default function Menu() {
 
     const handleEdit = (id: string) => {
         console.log(`select id ${id}`);
+        setEditId(id);
     };
+
     return (
         <Box
             sx={{
                 display: "flex",
                 flexDirection: "column",
                 height: "100vh",
+                maxHeight: "100vh",
             }}
         >
-            <Box sx={{ background: "red", height: "10%" }}></Box>
+            <Box sx={{ background: "#1B3C53", height: "10%" }}></Box>
 
-            <Grid container spacing={2} sx={{ height: "80%" }}>
-                <Grid size={4} sx={{ background: "#eeeeee" }}>
-                    <TreeView menus={menus} handleEdit={handleEdit} />
+            <Grid
+                container
+                spacing={2}
+                sx={{ height: "80%" }}
+                maxHeight={"80%"}
+            >
+                <Grid
+                    size={4}
+                    sx={{ background: "#E3E3E3" }}
+                    maxHeight={"100%"}
+                    overflow={"auto"}
+                >
+                    <TreeView menus={allMenus} handleEdit={handleEdit} />
                 </Grid>
 
-                <Grid size={8} boxShadow={1} sx={{ padding: 1 }}>
-                    <EditMenu allMenus={menus} idEdit="105" />
+                <Grid
+                    size={8}
+                    boxShadow={1}
+                    sx={{ padding: 1 }}
+                    maxHeight={"100%"}
+                    overflow={"auto"}
+                >
+                    <EditMenu idEdit={editId} allMenus={allMenus} />
                 </Grid>
             </Grid>
         </Box>

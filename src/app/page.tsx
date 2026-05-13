@@ -27,13 +27,4 @@ export default function Home() {
   );
 }
 
-/*
-  return (
-    <div className="text-blue">
-      <h1>this is Home Page</h1>
-      <Link href={"/about"}>
-        <Button>goto about</Button>
-      </Link>
-    </div>
-  );
-  */
+

@@ -3,3 +3,4 @@ npx create-next-app@latest
 
 tailwind toturial
 //https://git.ir/udemy-tailwind-css-from-scratch-learn-by-building-projects-2/#course-lectures-section
+

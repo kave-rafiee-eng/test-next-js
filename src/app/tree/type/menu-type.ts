@@ -1,36 +1,49 @@
+//--------------------- new Menu Types
 export enum typeMenuEnum {
     UNDEFINDED = "UNDEFINDED",
     SUBMENU = "SUBMENU",
     SETTING_ON_PARAMETER = "SETTING_ON_PARAMETER",
     SETTING_ON_SELECT = "SETTING_ON_SELECT",
-    MULTY_SELECT_ONE_STAGE = "MULTY_SELECT_ONE_STAGE",
-    MULTY_GROUP = "MULTY_GROUP",
+    SETTING_MULTY_SELECT = "SETTING_MULTY_SELECT",
+    SETTING_MULTY_GROUP = "SETTING_MULTY_GROUP",
 }
+//
 
-type optionType = {
+export type DescriptionType = Record<
+    "english" | "persian" | "arabic" | "turkish" | "russian" | "german",
+    string
+>;
+
+export type MiniDescriptionType = Record<"english" | "persian", string>;
+
+export type optionType = {
     value: string;
-    describe: string;
+    description: MiniDescriptionType;
 };
-type settingOneParameterType = {
+
+export type settingOneParameterType = {
     address: number;
     addition: number;
     unit: string;
     factor: number;
     minValue: number;
     maxValue: number;
-    lable: string;
+    label: string;
+    description: DescriptionType;
 };
 
-type settingOneSelectType = {
+export type settingOneSelectType = {
     address: number;
     options: optionType[];
-    lable: string;
+    label: string;
+    description: DescriptionType;
 };
 
-type settingMultySelectType = {
+export type settingMultySelectType = {
     addresses: number[];
     options: optionType[];
     itemLabels: optionType[];
+    description: DescriptionType;
 };
 
 type settingMultyGroupType = {
@@ -49,8 +62,6 @@ type ParanetIdLableType = {
     id: string;
     label: string;
 };
-
-export type DescriptionType = Record<"en" | "fa", string>;
 
 export type menuType = {
     id: string;

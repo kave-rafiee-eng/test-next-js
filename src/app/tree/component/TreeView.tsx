@@ -89,8 +89,6 @@ export default function TreeView({ menus, handleEdit }: TreeViewProps) {
         type: "subMenu",
     };
 
-    console.log(treeData);
-
     const renderTree = (nodes: nodesType) => (
         <TreeItem
             key={nodes.id}
@@ -125,8 +123,8 @@ export default function TreeView({ menus, handleEdit }: TreeViewProps) {
     );
 
     return (
-        <Stack spacing={2}>
-            <Box sx={{ minHeight: 352, minWidth: 250 }}>
+        <Stack spacing={2} maxHeight={"100%"}>
+            <Box sx={{ maxHeight: "100%" }}>
                 <SimpleTreeView apiRef={apiRef} defaultExpandedItems={["grid"]}>
                     {renderTree(treeData)}
                 </SimpleTreeView>
