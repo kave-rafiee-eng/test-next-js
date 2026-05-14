@@ -18,10 +18,12 @@ import axios from "axios";
 import { useSnackBarError } from "../snakebar-store";
 
 type propsType = {
-    description: DescriptionType;
-    setDescription: (set: (prev: DescriptionType) => DescriptionType) => void;
+    description: MiniDescriptionType;
+    setDescription: (
+        set: (prev: MiniDescriptionType) => MiniDescriptionType,
+    ) => void;
 };
-export default function EditDescription({
+export default function EditDescriptionAi({
     description,
     setDescription,
 }: propsType) {
@@ -55,22 +57,17 @@ export default function EditDescription({
                 baseURL: "http://localhost:8000",
             });
             try {
-                const resault = await api.post("/translate", {
+                const resault = await api.post("/translateToEnglish", {
                     text: description.persian,
                 });
                 console.log(resault.data);
-                const translate: DescriptionType = resault.data;
-                if (
-                    translate.arabic &&
-                    translate.english &&
-                    translate.german &&
-                    translate.german &&
-                    translate.persian &&
-                    translate.russian &&
-                    translate.turkish
-                ) {
-                    setDescription(() => {
-                        return translate;
+                const translate: MiniDescriptionType = resault.data;
+                if (translate.english) {
+                    setDescription((prev) => {
+                        return {
+                            ...prev,
+                            english: translate.english,
+                        };
                     });
                 } else addMessage("Error structure", "error");
             } catch (err) {
@@ -87,8 +84,8 @@ export default function EditDescription({
     return (
         <Stack direction={"column"} spacing={2} pt={2}>
             <Stack direction={"row"} spacing={2}>
-                <Typography color="secondary" variant="h6">
-                    description For User
+                <Typography variant="h6">
+                    Additional Description For Ai{" "}
                 </Typography>
                 <FormControl
                     sx={{

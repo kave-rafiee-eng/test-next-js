@@ -24,7 +24,6 @@ import {
 import EditMenu_settingOneSelect from "./EditMenu-settingOneSelect";
 import axios from "axios";
 import EditMenu_settingMultySelect from "./EditMenu-settingMultySelect";
-import { useSnackBarError } from "../snakebar-store";
 
 const api = axios.create({
     baseURL: "http://localhost:3000",
@@ -45,8 +44,6 @@ export default function EditMenu({ idEdit, allMenus }: EditMenuPropsType) {
     const [saveing, setSaveing] = React.useState(false);
     const [itemOfMulty, setItemOfMulty] = React.useState(0);
 
-    const addMessage = useSnackBarError((state) => state.addMessage);
-
     useEffect(() => {
         console.log("calculate navigations");
         async function getMenu(id: string) {
@@ -58,7 +55,6 @@ export default function EditMenu({ idEdit, allMenus }: EditMenuPropsType) {
                 setItemOfMulty(0);
             } catch (err) {
                 console.log(err);
-                addMessage("connection error", "error");
             }
         }
         getMenu(idEdit);
@@ -83,6 +79,39 @@ export default function EditMenu({ idEdit, allMenus }: EditMenuPropsType) {
         return result;
     }, [menuState, allMenus]);
 
+    useEffect(() => {
+        if (
+            menuState?.type == typeMenuEnum.SETTING_ON_PARAMETER ||
+            menuState?.type == typeMenuEnum.SETTING_ON_SELECT ||
+            menuState?.type == typeMenuEnum.SETTING_MULTY_SELECT
+        ) {
+            // descrption = menuState.description;
+            // setDescription = (set) => {
+            //     setMenuState((prev) => {
+            //         if (!prev) return prev;
+            //         const newDes = set(prev.description);
+            //         return {
+            //             ...prev,
+            //             description: newDes,
+            //         };
+            //     });
+            // };
+            // descrption_AI = menuState.additional_description_for_ai_assistant;
+            // setDescription_AI = (set) => {
+            //     setMenuState((prev) => {
+            //         if (!prev) return prev;
+            //         const newDes = set(
+            //             prev.additional_description_for_ai_assistant,
+            //         );
+            //         return {
+            //             ...prev,
+            //             additional_description_for_ai_assistant: newDes,
+            //         };
+            //     });
+            // };
+        }
+    }, [idEdit]);
+
     const handleSave = async () => {
         if (menuState == undefined) return;
         setSaveing(true);
@@ -92,10 +121,8 @@ export default function EditMenu({ idEdit, allMenus }: EditMenuPropsType) {
         try {
             const res = await api.patch(url, menuState);
             console.log(res.data);
-            addMessage("Saved", "succes");
         } catch (err) {
             console.log(err);
-            addMessage("connection error", "error");
         }
         setSaveing(false);
     };
@@ -137,36 +164,6 @@ export default function EditMenu({ idEdit, allMenus }: EditMenuPropsType) {
     let Item_multySelect: settingMultySelectType | undefined = undefined;
     //---------------------------------
 
-    if (
-        menuState?.type == typeMenuEnum.SETTING_ON_PARAMETER ||
-        menuState?.type == typeMenuEnum.SETTING_ON_SELECT ||
-        menuState?.type == typeMenuEnum.SETTING_MULTY_SELECT
-    ) {
-        descrption = menuState.description;
-        setDescription = (set) => {
-            setMenuState((prev) => {
-                if (!prev) return prev;
-                const newDes = set(prev.description);
-                return {
-                    ...prev,
-                    description: newDes,
-                };
-            });
-        };
-        descrption_AI = menuState.additional_description_for_ai_assistant;
-        setDescription_AI = (set) => {
-            setMenuState((prev) => {
-                if (!prev) return prev;
-                const newDes = set(
-                    prev.additional_description_for_ai_assistant,
-                );
-                return {
-                    ...prev,
-                    additional_description_for_ai_assistant: newDes,
-                };
-            });
-        };
-    }
     if (menuState?.type == typeMenuEnum.SETTING_ON_PARAMETER) {
         Item_oneParameter = menuState.data.settingOneParameter;
         setItem_oneParameter = (set) => {
@@ -252,17 +249,17 @@ export default function EditMenu({ idEdit, allMenus }: EditMenuPropsType) {
                 });
             };
 
-            descrption = Item_oneParameter.description;
-            setDescription = (set) => {
-                if (setItem_oneParameter == undefined) return;
-                setItem_oneParameter((prevItem) => {
-                    const newDes = set(prevItem.description);
-                    return {
-                        ...prevItem,
-                        description: newDes,
-                    };
-                });
-            };
+            // descrption = Item_oneParameter.description;
+            // setDescription = (set) => {
+            //     if (setItem_oneParameter == undefined) return;
+            //     setItem_oneParameter((prevItem) => {
+            //         const newDes = set(prevItem.description);
+            //         return {
+            //             ...prevItem,
+            //             description: newDes,
+            //         };
+            //     });
+            // };
 
             descrption_AI =
                 Item_oneParameter.additional_description_for_ai_assistant;
@@ -308,17 +305,17 @@ export default function EditMenu({ idEdit, allMenus }: EditMenuPropsType) {
                 });
             };
 
-            descrption = Item_oneSelect.description;
-            setDescription = (set) => {
-                if (setItem_oneSelect == undefined) return;
-                setItem_oneSelect((prevItem) => {
-                    const newDes = set(prevItem.description);
-                    return {
-                        ...prevItem,
-                        description: newDes,
-                    };
-                });
-            };
+            // descrption = Item_oneSelect.description;
+            // setDescription = (set) => {
+            //     if (setItem_oneSelect == undefined) return;
+            //     setItem_oneSelect((prevItem) => {
+            //         const newDes = set(prevItem.description);
+            //         return {
+            //             ...prevItem,
+            //             description: newDes,
+            //         };
+            //     });
+            // };
 
             descrption_AI =
                 Item_oneSelect.additional_description_for_ai_assistant;
@@ -451,7 +448,7 @@ export default function EditMenu({ idEdit, allMenus }: EditMenuPropsType) {
             ) : (
                 ""
             )}
-
+            {/* 
             {Item_oneSelect &&
             setItem_oneSelect &&
             descrption &&
@@ -468,8 +465,8 @@ export default function EditMenu({ idEdit, allMenus }: EditMenuPropsType) {
                 />
             ) : (
                 ""
-            )}
-
+            )} */}
+            {/* 
             {Item_multySelect &&
             setItem_multySelect &&
             descrption &&
@@ -486,7 +483,7 @@ export default function EditMenu({ idEdit, allMenus }: EditMenuPropsType) {
                 />
             ) : (
                 ""
-            )}
+            )} */}
         </Stack>
     );
 }

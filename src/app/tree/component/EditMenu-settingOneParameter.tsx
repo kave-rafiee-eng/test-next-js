@@ -7,6 +7,7 @@ import {
     menuType,
     DescriptionType,
     settingOneParameterType,
+    MiniDescriptionType,
 } from "../type/menu-type";
 import {
     Button,
@@ -29,15 +30,28 @@ import { TableBasic, TableBasicProps } from "./TableBasic";
 import axios from "axios";
 import EditDescription from "./EditDescription";
 import EditStrucure from "./EditStructure";
+import EditDescriptionAi from "./EditDescriptionAi";
 type propsType = {
     setting: settingOneParameterType;
     setSetting: (
         set: (prev: settingOneParameterType) => settingOneParameterType,
     ) => void;
+
+    descrption: DescriptionType;
+    setDescription: (set: (prev: DescriptionType) => DescriptionType) => void;
+
+    descrption_AI: MiniDescriptionType;
+    setDescription_AI: (
+        set: (prev: MiniDescriptionType) => MiniDescriptionType,
+    ) => void;
 };
 export default function EditMenu_settingOneParameter({
     setting,
     setSetting,
+    descrption,
+    setDescription,
+    descrption_AI,
+    setDescription_AI,
 }: propsType) {
     const [tab, setTab] = React.useState("Structure");
 
@@ -45,15 +59,6 @@ export default function EditMenu_settingOneParameter({
         setTab(newValue);
     };
 
-    const description = setting.description;
-    const setDescription = (newDescrip: DescriptionType) => {
-        setSetting((prev) => {
-            return {
-                ...prev,
-                description: newDescrip,
-            };
-        });
-    };
     return (
         <>
             <Box sx={{ width: "100%", height: "80%" }}>
@@ -68,10 +73,22 @@ export default function EditMenu_settingOneParameter({
                     <Tab value="Structure" label="Structure" />
                 </Tabs>
 
-                <div hidden={tab != "Description"}>
+                <div
+                    hidden={tab != "Description"}
+                    style={{
+                        width: "100%",
+                        height: "80%",
+                        maxHeight: "80%",
+                        overflowY: "auto",
+                    }}
+                >
                     <EditDescription
-                        description={description}
+                        description={descrption}
                         setDescription={setDescription}
+                    />
+                    <EditDescriptionAi
+                        description={descrption_AI}
+                        setDescription={setDescription_AI}
                     />
                 </div>
                 <div

@@ -1,4 +1,3 @@
-//--------------------- new Menu Types
 export enum typeMenuEnum {
     UNDEFINDED = "UNDEFINDED",
     SUBMENU = "SUBMENU",
@@ -30,6 +29,7 @@ export type settingOneParameterType = {
     maxValue: number;
     label: string;
     description: DescriptionType;
+    additional_description_for_ai_assistant: MiniDescriptionType;
 };
 
 export type settingOneSelectType = {
@@ -37,6 +37,7 @@ export type settingOneSelectType = {
     options: optionType[];
     label: string;
     description: DescriptionType;
+    additional_description_for_ai_assistant: MiniDescriptionType;
 };
 
 export type settingMultySelectType = {
@@ -44,21 +45,22 @@ export type settingMultySelectType = {
     options: optionType[];
     itemLabels: optionType[];
     description: DescriptionType;
+    additional_description_for_ai_assistant: MiniDescriptionType;
 };
 
-type settingMultyGroupType = {
+export type settingMultyGroupType = {
     settingOneParameter?: settingOneParameterType;
     settingOneSelect?: settingOneSelectType;
 };
 
-type menuDataType = {
+export type menuDataType = {
     settingOneParameter?: settingOneParameterType;
     settingOneSelect?: settingOneSelectType;
     settingMultySelect?: settingMultySelectType;
     settingMultyGroup?: settingMultyGroupType[];
 };
 
-type ParanetIdLableType = {
+export type ParanetIdLableType = {
     id: string;
     label: string;
 };
@@ -70,4 +72,5 @@ export type menuType = {
     type: typeMenuEnum;
     data: menuDataType;
     description: DescriptionType;
+    additional_description_for_ai_assistant: MiniDescriptionType;
 };

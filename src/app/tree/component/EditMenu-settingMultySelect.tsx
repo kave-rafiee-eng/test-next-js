@@ -34,10 +34,18 @@ import axios from "axios";
 import EditDescription from "./EditDescription";
 import EditStrucure from "./EditStructure";
 import EditOptions from "./EditOptions";
+import EditDescriptionAi from "./EditDescriptionAi";
 type propsType = {
     setting: settingMultySelectType;
     setSetting: (
         set: (prev: settingMultySelectType) => settingMultySelectType,
+    ) => void;
+    descrption: DescriptionType;
+    setDescription: (set: (prev: DescriptionType) => DescriptionType) => void;
+
+    descrption_AI: MiniDescriptionType;
+    setDescription_AI: (
+        set: (prev: MiniDescriptionType) => MiniDescriptionType,
     ) => void;
 };
 type tabType = "Structure" | "Description" | "Options" | "Items";
@@ -45,6 +53,10 @@ type tabType = "Structure" | "Description" | "Options" | "Items";
 export default function EditMenu_settingMultySelect({
     setting,
     setSetting,
+    descrption,
+    setDescription,
+    descrption_AI,
+    setDescription_AI,
 }: propsType) {
     const [tab, setTab] = React.useState<tabType>("Structure");
 
@@ -56,16 +68,6 @@ export default function EditMenu_settingMultySelect({
             newValue == "Items"
         )
             setTab(newValue);
-    };
-
-    const description = setting.description;
-    const setDescription = (newDescrip: DescriptionType) => {
-        setSetting((prev) => {
-            return {
-                ...prev,
-                description: newDescrip,
-            };
-        });
     };
 
     const options = setting.options;
@@ -106,8 +108,12 @@ export default function EditMenu_settingMultySelect({
 
                 <div hidden={tab != "Description"}>
                     <EditDescription
-                        description={description}
+                        description={descrption}
                         setDescription={setDescription}
+                    />
+                    <EditDescriptionAi
+                        description={descrption_AI}
+                        setDescription={setDescription_AI}
                     />
                 </div>
                 <div

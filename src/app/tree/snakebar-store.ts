@@ -1,23 +1,33 @@
 import { error } from "console";
 import { create } from "zustand";
 
-type snackbarStore = {
-    errors: string[];
-    addError: (text: string) => void;
-    deletError: (id: number) => void;
+type messageType = {
+    type: "error" | "succes";
+    text: string;
 };
+type snackbarStore = {
+    messages: messageType[];
+    addMessage: (text: string, type: "error" | "succes") => void;
+    deletMessage: (id: number) => void;
+};
+
 export const useSnackBarError = create<snackbarStore>((set, get) => ({
-    errors: [],
-    addError: (text) => {
+    messages: [],
+    addMessage: (text, type) => {
+        const newMess: messageType = {
+            type,
+            text,
+        };
         set((pre) => {
             return {
-                errors: [...pre.errors, text],
+                messages: [...pre.messages, newMess],
             };
         });
     },
-    deletError: (id) => {
+
+    deletMessage: (id) => {
         set((pre) => ({
-            errors: pre.errors.filter((_, index) => index !== id),
+            messages: pre.messages.filter((_, index) => index !== id),
         }));
     },
 }));

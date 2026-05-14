@@ -6,19 +6,18 @@ import Alert from "@mui/material/Alert";
 import { useSnackBarError } from "../snakebar-store";
 
 export default function SimpleSnackbar() {
-    const errors = useSnackBarError((state) => state.errors);
-    const addError = useSnackBarError((state) => state.addError);
-    const deletError = useSnackBarError((state) => state.deletError);
+    const messages = useSnackBarError((state) => state.messages);
+    const deletMessage = useSnackBarError((state) => state.deletMessage);
 
     const handleClose = (index: number) => {
-        deletError(index);
+        deletMessage(index);
     };
 
     return (
         <>
-            {errors.map((error, index) => (
+            {messages.map((message, index) => (
                 <Snackbar
-                    key={`${error}-${index}`}
+                    key={`${message.text}-${index}`}
                     open
                     autoHideDuration={40000}
                     anchorOrigin={{
@@ -30,7 +29,9 @@ export default function SimpleSnackbar() {
                     }}
                 >
                     <Alert
-                        severity="error"
+                        severity={
+                            message.type == "succes" ? "success" : "error"
+                        }
                         variant="filled"
                         onClose={() => handleClose(index)}
                         sx={{
@@ -40,7 +41,7 @@ export default function SimpleSnackbar() {
                             alignItems: "center",
                         }}
                     >
-                        {error}
+                        {message.text}
                     </Alert>
                 </Snackbar>
             ))}
